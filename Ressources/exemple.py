@@ -5,6 +5,7 @@ def lectureFichier(s): # Definition d'une fonction, avec un parametre (s). Ne pa
     contenu[0]=contenu[0].split()     # ligne.split() renvoie une liste de toutes les chaines contenues dans la chaine ligne (separateur=espace)
     contenu[1]=contenu[1].split()
     return contenu
+
     # Commandes utiles:
     # n=int(s) transforme la chaine s en entier.
     # s=str(n) l'inverse

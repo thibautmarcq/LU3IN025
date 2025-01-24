@@ -1,7 +1,17 @@
-import exemple # Pour pouvoir utiliser les methodes de exemple.py
+import tools
+import galeshapley as gs
 
-print("bonjour")
-maListe=exemple.lectureFichier("test.txt") # Execution de la methode lectureFichier du fichier exemple.
+maListe=tools.lectureEtu("PrefEtu.txt")
 print(maListe)
+
 print(len(maListe)) #Longueur de la liste.
-exemple.createFichierLP(maListe[0][0],int(maListe[1][0])) #Methode int(): transforme la chaine de caracteres en entier
+
+maList=tools.lectureSpe("PrefSpe.txt")
+print(maList[0])
+print(len(maList[0])) 
+
+
+print(type((maList[0])[0][0])) #Type de l'element d'indice 0 de la liste d'indice 0
+# exemple.createFichierLP(maListe[0][0],int(maListe[1][0])) #Methode int(): transforme la chaine de caracteres en entier
+
+# gs.galeShapley(maListe,maList)
