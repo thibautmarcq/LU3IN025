@@ -63,3 +63,38 @@ def galeShapley(tabEtu, tabSpe, cap):
                 
     print(sorted(list(affectations.items())))
     return affectations
+
+
+def galeShapley2(tabEtu, tabSpe, cap):
+    spe_libres = list(range(len(tabSpe)))
+    capSpe = cap.copy()   
+    dictEtu = {i: list(tabEtu[i]) for i in range(len(tabEtu))} 
+    dictSpe = {i: list(tabSpe[i]) for i in range(len(tabSpe))} 
+    affect = {} 
+
+    while (len(spe_libres) != 0):#tant qu'il reste une spe libre
+        spe_i = spe_libres.pop()     
+        
+        while(capSpe[spe_i] > 0):     
+            etu_j = int(dictSpe[spe_i].pop(0)) 
+
+            if(etu_j not in affect.keys()):
+                affect[etu_j] = spe_i
+                capSpe[spe_i] -= 1 
+            else:
+                curSpe = affect.get(etu_j) #spe affectée à l'etu_j
+                curIndex = dictEtu[etu_j].index(curSpe) #index le de spe qui a été affectée à l'etu_j
+                index = dictEtu[etu_j].index(spe_i) #index de la spe_i dans le classement de l'etu_j
+                if(curIndex > index): #si la spe_i est mieux classée que la spe affectée
+                    spe_libres.append(curSpe)
+                    capSpe[curSpe] += 1
+                    affect[etu_j] = spe_i
+                    capSpe[spe_i] -= 1
+                    
+
+    
+    print(sorted(list(affect.items())))
+    return affect      
+
+
+           

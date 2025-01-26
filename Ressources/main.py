@@ -19,4 +19,5 @@ capSpe = specap[1]
 # exemple.createFichierLP(maListe[0][0],int(maListe[1][0])) #Methode int(): transforme la chaine de caracteres en entier
 
 # gs.galeShapley(maListe,maList)
-print(gs.galeShapley(listeEtu, listeSpe, capSpe))
+gs.galeShapley(listeEtu, listeSpe, capSpe)
+gs.galeShapley2(listeEtu, listeSpe, capSpe)
