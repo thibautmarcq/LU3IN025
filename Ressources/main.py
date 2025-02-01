@@ -29,10 +29,15 @@ aff2 = gs.galeShapley2(listeEtu, listeSpe, capSpe)
 
 print(aff1)
 print(gs.testInstable(aff1, listeEtu, listeSpe))
+
 aff1 : dict[int, list[int]]
 rm0 = aff1[8].pop()
 rm1 = aff1[7].pop()
-aff1[8].append(rm1)
+rm2 = aff1[0].pop()
+aff1[8].append(rm2)
 aff1[7].append(rm0)
+aff1[0].append(rm1)
 print(gs.testInstable(aff1, listeEtu, listeSpe))
 print(aff1)
+
+
