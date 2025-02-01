@@ -21,9 +21,18 @@ capSpe = specap[1]
 
 # t = time()
 # for i in range(0, 100000):
-gs.galeShapley2(listeEtu, listeSpe, capSpe)
 # t= time()-t
 # print(t)
 
+aff1 = gs.galeShapley(listeEtu, listeSpe, capSpe)
+aff2 = gs.galeShapley2(listeEtu, listeSpe, capSpe)
 
-gs.galeShapley(listeEtu, listeSpe, capSpe)
+print(aff1)
+print(gs.testInstable(aff1, listeEtu, listeSpe))
+aff1 : dict[int, list[int]]
+rm0 = aff1[8].pop()
+rm1 = aff1[7].pop()
+aff1[8].append(rm1)
+aff1[7].append(rm0)
+print(gs.testInstable(aff1, listeEtu, listeSpe))
+print(aff1)

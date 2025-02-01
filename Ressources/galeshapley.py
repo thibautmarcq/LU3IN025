@@ -36,7 +36,7 @@ def galeShapley(tabEtu, tabSpe, cap):
     for spe_h in affectations:
         affectations[spe_h] = [etu for _, etu in sorted(affectations[spe_h])]
 
-    print(sorted(list(affectations.items())))
+    # print(sorted(list(affectations.items())))
     return affectations
 
 
@@ -76,27 +76,27 @@ def galeShapley2(tabEtu, tabSpe, cap):
     for spe_h in affectations:
         affectations[spe_h] = [etu for _, etu in sorted(affectations[spe_h])]
 
-    print(sorted(list(affect.items())))
+    # print(sorted(list(affect.items())))
     return affect    
 
 
-def testAffectations(affectations, prefEtu, prefSpe):
-    dictValue = {i: list(prefEtu[i]) for i in range(len(prefEtu))}
-    for spe, etudiants in affectations.items():
-        
-                
-
-
-def testAffectations(affectations, prefEtu, prefSpe):
+def testInstable(affectations: dict[int, list[int]], prefEtu: list[list[int]], prefSpe: list[list[int]]):
     pairesInstables = []
+    prefEtu = prefEtu.tolist()
+    prefSpe = prefSpe.tolist()
+    
     for spe, etudiants in affectations.items():
         for etu in etudiants:
-            i = 0
-            while (etu != prefSpe[spe][i]):
-                j=0
-                while (spe != prefEtu[etu][j]):
-                    
-                    
-                    j+=1
+            
+            idSpe = prefEtu[etu].index(spe) #score de spe dans les prefs de etu
+            for speP in prefEtu[etu][:idSpe]: #parcours des spé que etu prefères à la sienne
                 
-                i+=1
+                # il faut que cette spé préfère etu aux siens
+                lessPrefSpeP = max([prefSpe[speP].index(i) for i in affectations[speP]])
+                for etuP in prefSpe[speP][:lessPrefSpeP]: # on parcours tous les étudiants 
+                    
+                    if (etuP==etu):
+                        pairesInstables.append((spe, etu))
+                
+# if etuP == etu -> si un des etu de spéPref_deEtu est etu alors instable
+    return pairesInstables
