@@ -26,9 +26,11 @@ def galeShapley(tabEtu, tabSpe, cap):
 
             idx_i = dictSpe[spe_h].index(num_i)
             if idx_i < max_pref:  # h pref I à least_pref
-                hq.heappop(affectations[spe_h])  # enleve le pire étudiant
+                affectations[spe_h].remove((max_pref, worst_etu))  # enleve le pire étudiant
+                hq.heapify(affectations[spe_h])  # reconvertir en heap
                 etu_libres.append(worst_etu)  # rajout du pire dans les libres
                 hq.heappush(affectations[spe_h], (idx_i, num_i))  # ajout du meilleur (i)
+
             else:  # H rejette la proposition de i
                 etu_libres.append(num_i)
 
@@ -52,7 +54,7 @@ def galeShapley2(tabEtu, tabSpe, cap):
     while spe_libres:  # tant qu'il reste une spe libre
         spe_i = spe_libres.pop()
 
-        while capSpe[spe_i] > 0 and dictSpe[spe_i]:  # tant qu'il reste de la capacité et des étudiants à proposer
+        while capSpe[spe_i] > 0:  # tant qu'il reste de la capacité et des étudiants à proposer
             etu_j = int(dictSpe[spe_i].pop(0))
 
             if etu_j not in affect:

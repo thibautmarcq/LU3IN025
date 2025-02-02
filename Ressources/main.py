@@ -1,5 +1,7 @@
 import tools
 import galeshapley as gs
+import generatePref as gp
+import matplotlib.pyplot as plt
 from time import *
 
 listeEtu=tools.lectureEtu("PrefEtu.txt")
@@ -41,3 +43,26 @@ print(gs.testInstable(aff1, listeEtu, listeSpe))
 print(aff1)
 
 
+lstn = []
+lsttemps1 = []
+lsttemps2 = []
+for i in range(200, 2000, 200):
+    capSpe = [i//9, i//9, i//9, i//9, i//9, i//9, i//9, i//9, i//9 + i%9]
+    lstn.append(i)
+
+    t = time()
+    for _ in range(10):
+        gs.galeShapley(gp.generatePrefEtu(i), gp.generatePrefSpe(i), capSpe)
+    t = time() - t
+    lsttemps1.append(t/10)
+
+    t2 = time()
+    for _ in range(10):
+        gs.galeShapley(gp.generatePrefEtu(i), gp.generatePrefSpe(i), capSpe)
+    t2 = time() - t2
+    lsttemps2.append(t2/10)
+
+plt.plot(lstn, lsttemps1, label="galeShapley")
+plt.plot(lstn, lsttemps2, label="galeShapley2")
+plt.legend()
+plt.show()
