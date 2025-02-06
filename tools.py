@@ -1,4 +1,5 @@
 import numpy as np
+import random
 
 def lectureEtu(s): 
     monFichier = open(s, "r")
@@ -25,3 +26,20 @@ def lectureSpe(s):
         contenu[i] = contenu[i].split()
         res[i-2] = contenu[i][2:]
     return (res,cap)
+
+
+def generatePrefEtu(n : int):
+    prefs = []
+    for _ in range(n):
+        pref = list(range(9))
+        random.shuffle(pref)
+        prefs.append(pref)
+    return prefs
+       
+def generatePrefSpe(n: int):
+    prefs = []
+    for _ in range(9):
+        pref = list(range(n))
+        random.shuffle(pref)
+        prefs.append(pref)
+    return prefs

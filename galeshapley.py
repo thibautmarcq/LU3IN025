@@ -3,6 +3,8 @@ import heapq as hq
 
 
 def galeShapley(tabEtu, tabSpe, cap):
+    # Algorithme de Gale-Shapley côté étudiants
+    
     # Initialisation
     etu_libres = list(range(len(tabEtu)))
     capSpe = cap.copy()  # list[int]
