@@ -43,3 +43,14 @@ def generatePrefSpe(n: int):
         random.shuffle(pref)
         prefs.append(pref)
     return prefs
+
+def createPLNE(k : int, prefEtu, prefSpe, capSpe):
+    f = open("fichier.lp", "w")
+    f.write("Maximize\nobj: ")
+    for i in range(k):
+        None
+    f.write("\nSubject To\n")
+
+
+    f.write("End")
+    f.close()
