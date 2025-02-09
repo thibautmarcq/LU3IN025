@@ -1,2 +1,4 @@
 *.pyc
 __pycache__
+gurobi.log
+.vscode
