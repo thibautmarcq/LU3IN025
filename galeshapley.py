@@ -1,4 +1,3 @@
-import numpy as np
 import heapq as hq
 
 
@@ -6,10 +5,10 @@ def galeShapley(tabEtu, tabSpe, cap):
     # Algorithme de Gale-Shapley côté étudiants
     
     # Initialisation
-    etu_libres = list(range(len(tabEtu)))
+    etu_libres = set(range(len(tabEtu)))
     capSpe = cap.copy()  # list[int]
     dictEtu = {i: list(tabEtu[i]) for i in range(len(tabEtu))}  # dict etu - clé: num étu, bucket: liste pref etu (int: int)
-    dictSpe = {i: list(tabSpe[i]) for i in range(len(tabSpe))}  # dict spe - clé: num spé, bucket: liste pref spé
+    dictSpeIndices = {i: {etu: idx for idx, etu in enumerate(tabSpe[i])} for i in range(len(tabSpe))}  # dict spe - clé: num spé, bucket: dict etu: index
     affectations = {}  # dico résultats, clé: num spé, bucket: liste des étu choisis dans la spé (int, int)
 
     while etu_libres:  # tant qu'il reste un etu libre
@@ -22,36 +21,37 @@ def galeShapley(tabEtu, tabSpe, cap):
 
         if capSpe[spe_h] > 0:  # H n'a pas atteint sa cap max
             capSpe[spe_h] -= 1  # on diminue la capacité restante de H
-            hq.heappush(affectations[spe_h], (dictSpe[spe_h].index(num_i), num_i))
+            hq.heappush(affectations[spe_h], (dictSpeIndices[spe_h][num_i], num_i))
         else:  # on a atteint la capacité max de la spe_H
             max_pref, worst_etu = hq.nlargest(1, affectations[spe_h])[0]  # on obtient l'etudiant le moins préféré de la spé
 
-            idx_i = dictSpe[spe_h].index(num_i)
+            idx_i = dictSpeIndices[spe_h][num_i]
             if idx_i < max_pref:  # h pref I à least_pref
                 affectations[spe_h].remove((max_pref, worst_etu))  # enleve le pire étudiant
                 hq.heapify(affectations[spe_h])  # reconvertir en heap
-                etu_libres.append(worst_etu)  # rajout du pire dans les libres
+                etu_libres.add(worst_etu)  # rajout du pire dans les libres
                 hq.heappush(affectations[spe_h], (idx_i, num_i))  # ajout du meilleur (i)
 
             else:  # H rejette la proposition de i
-                etu_libres.append(num_i)
+                etu_libres.add(num_i)
 
     # Convert heap to sorted list for final output
     for spe_h in affectations:
         affectations[spe_h] = [etu for _, etu in sorted(affectations[spe_h])]
 
-    # print(sorted(list(affectations.items())))
     return affectations
 
 
 
 def galeShapley2(tabEtu, tabSpe, cap):
-    spe_libres = list(range(len(tabSpe)))
+    # Algorithme de Gale-Shapley côté parcours 
+
+    # Initialisation
+    spe_libres = set(range(len(tabSpe)))
     capSpe = cap.copy()
-    dictEtu = {i: list(tabEtu[i]) for i in range(len(tabEtu))}
+    dictEtuIndices = {i: {spe: idx for idx, spe in enumerate(tabEtu[i])} for i in range(len(tabEtu))}  # dict étu - clé: num étu, bucket: dict spé: index
     dictSpe = {i: list(tabSpe[i]) for i in range(len(tabSpe))}
     affect = {}
-    affectations = {i: [] for i in range(len(tabSpe))}
 
     while spe_libres:  # tant qu'il reste une spe libre
         spe_i = spe_libres.pop()
@@ -62,26 +62,18 @@ def galeShapley2(tabEtu, tabSpe, cap):
             if etu_j not in affect:
                 affect[etu_j] = spe_i
                 capSpe[spe_i] -= 1
-                hq.heappush(affectations[spe_i], (dictEtu[etu_j].index(spe_i), etu_j))
             else:
                 curSpe = affect[etu_j]  # spe affectée à l'etu_j
-                curIndex = dictEtu[etu_j].index(curSpe)  # index de la spe qui a été affectée à l'etu_j
-                index = dictEtu[etu_j].index(spe_i)  # index de la spe_i dans le classement de l'etu_j
+                curIndex = dictEtuIndices[etu_j][curSpe] # index de la spe qui a été affectée à l'etu_j
+                index = dictEtuIndices[etu_j][spe_i]  # index de la spe_i dans le classement de l'etu_j
                 if curIndex > index:  # si la spe_i est mieux classée que la spe affectée
-                    spe_libres.append(curSpe)
+                    spe_libres.add(curSpe)
                     capSpe[curSpe] += 1
                     affect[etu_j] = spe_i
                     capSpe[spe_i] -= 1
-                    hq.heappush(affectations[spe_i], (index, etu_j))
-                    # Enleve l'etudiantde la specialité actuelle
-                    affectations[curSpe] = [(pref, etu) for pref, etu in affectations[curSpe] if etu != etu_j]
-                    hq.heapify(affectations[curSpe])
 
-    for spe_h in affectations:
-        affectations[spe_h] = [etu for _, etu in sorted(affectations[spe_h])]
 
-    # print(sorted(list(affect.items())))
-    return affect    
+    return affect   
 
 
 def testInstable(affectations: dict[int, list[int]], prefEtu: list[list[int]], prefSpe: list[list[int]]):

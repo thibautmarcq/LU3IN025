@@ -36,7 +36,7 @@ def main():
     lstn = []
     lsttemps1 = []
     lsttemps2 = []
-    for i in range(200, 2000, 200):
+    for i in range(200, 2001, 200):
         capSpe = [i//9, i//9, i//9, i//9, i//9, i//9, i//9, i//9, i//9 + i%9]
         lstn.append(i)
 
@@ -48,17 +48,16 @@ def main():
 
         t2 = time()
         for _ in range(10):
-            gs.galeShapley(tools.generatePrefEtu(i), tools.generatePrefSpe(i), capSpe)
+            gs.galeShapley2(tools.generatePrefEtu(i), tools.generatePrefSpe(i), capSpe)
         t2 = time() - t2
         lsttemps2.append(t2/10)
 
-    # plt.plot(lstn, lsttemps1, label="galeShapley")
-    # plt.plot(lstn, lsttemps2, label="galeShapley2")
-    # plt.xlabel("Nombre n d'étudiants")
-    # plt.ylabel("Temps de calcul moyen")
-    # plt.legend()
-    # plt.savefig('Results/evolution_temps_nbEtu.svg')
-    # plt.show()
+    plt.plot(lstn, lsttemps1, label="galeShapley")
+    plt.plot(lstn, lsttemps2, label="galeShapley2")
+    plt.xlabel("Nombre n d'étudiants")
+    plt.ylabel("Temps de calcul moyen")
+    plt.legend()
+    plt.savefig('Results/evolution_temps_nbEtu.svg')
 
     
     
