@@ -26,7 +26,7 @@ def main():
     aff1[8].append(rm2)
     aff1[7].append(rm0)
     aff1[0].append(rm1)
-    print("Test instabilité après dérèglage \n > ", gs.testInstable(aff1, listeEtu, listeSpe))
+    print("Test instabilité après déréglage \n > ", gs.testInstable(aff1, listeEtu, listeSpe))
     print("Affectations avec paires instables \n > ", aff1)
 
     # Création du PLNE

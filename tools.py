@@ -44,8 +44,8 @@ def generatePrefSpe(n: int):
 		prefs.append(pref)
 	return prefs
 
-def createPLNE(k : int, prefEtu, capSpe):
-	f = open("fichier.lp", "w")
+def createPLNE(k : int, prefEtu, capSpe, outFile):
+	f = open(outFile, "w")
 	f.write("Maximize\nobj: ")
 	l = [] #liste des variables
 	l2 = {} #dico clé:spé, valeur:liste des variables xi_j avec i étudiant et j clé spé
