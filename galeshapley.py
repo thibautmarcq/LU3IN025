@@ -5,7 +5,7 @@ import heapq as hq
 
 def galeShapley(tabEtu, tabSpe, cap):
     # Algorithme de Gale-Shapley côté étudiants
-    # nb_it = 0
+    nb_it = 0
     # Initialisation
     etu_libres = set(range(len(tabEtu)))
     capSpe = cap.copy()  # list[int]
@@ -14,7 +14,7 @@ def galeShapley(tabEtu, tabSpe, cap):
     affectations = {}  # dico résultats, clé: num spé, bucket: liste des étu choisis dans la spé (int, int)
 
     while etu_libres:  # tant qu'il reste un etu libre
-        # nb_it+=1
+        nb_it+=1
         num_i = etu_libres.pop()
         spe_h = int(dictEtu[num_i].pop(0))  # premier élément dans les prefs de i (retiré)
 
@@ -40,13 +40,13 @@ def galeShapley(tabEtu, tabSpe, cap):
     for spe_h in affectations:
         affectations[spe_h] = [etu for _, etu in sorted(affectations[spe_h])]
     # print("gs etu", nb_it)
-    return affectations
+    return affectations, nb_it
 
 
 # O(s*e)
 def galeShapley2(tabEtu, tabSpe, cap):
     # Algorithme de Gale-Shapley côté parcours 
-    # nb_it = 0
+    nb_it = 0
 
     # Initialisation
     spe_libres = set(range(len(tabSpe)))
@@ -56,11 +56,11 @@ def galeShapley2(tabEtu, tabSpe, cap):
     affect = {}
 
     while spe_libres:  # tant qu'il reste une spe libre
+        nb_it += 1
         spe_i = spe_libres.pop()
 
         while capSpe[spe_i] > 0:  # tant qu'il reste de la capacité et des étudiants à proposer
             etu_j = int(dictSpe[spe_i].pop(0))
-            # nb_it += 1
 
             if etu_j not in affect:
                 affect[etu_j] = spe_i
@@ -76,7 +76,7 @@ def galeShapley2(tabEtu, tabSpe, cap):
                     capSpe[spe_i] -= 1
 
     # print("gs spe", nb_it)
-    return affect   
+    return affect, nb_it 
 
 
 def testInstable(affectations: dict[int, list[int]], prefEtu: list[list[int]], prefSpe: list[list[int]]):
