@@ -1,9 +1,11 @@
 import heapq as hq
 
+# O(e*s*log(c))
+# O(e*s*c*log(c)) avec heapify
 
 def galeShapley(tabEtu, tabSpe, cap):
     # Algorithme de Gale-Shapley côté étudiants
-    
+    # nb_it = 0
     # Initialisation
     etu_libres = set(range(len(tabEtu)))
     capSpe = cap.copy()  # list[int]
@@ -12,39 +14,39 @@ def galeShapley(tabEtu, tabSpe, cap):
     affectations = {}  # dico résultats, clé: num spé, bucket: liste des étu choisis dans la spé (int, int)
 
     while etu_libres:  # tant qu'il reste un etu libre
+        # nb_it+=1
         num_i = etu_libres.pop()
         spe_h = int(dictEtu[num_i].pop(0))  # premier élément dans les prefs de i (retiré)
 
         if spe_h not in affectations:
             affectations[spe_h] = []
-            hq.heapify(affectations[spe_h])
+
 
         if capSpe[spe_h] > 0:  # H n'a pas atteint sa cap max
             capSpe[spe_h] -= 1  # on diminue la capacité restante de H
-            hq.heappush(affectations[spe_h], (dictSpeIndices[spe_h][num_i], num_i))
+            hq.heappush(affectations[spe_h], (dictSpeIndices[spe_h][num_i], num_i)) # log(c)
         else:  # on a atteint la capacité max de la spe_H
-            max_pref, worst_etu = hq.nlargest(1, affectations[spe_h])[0]  # on obtient l'etudiant le moins préféré de la spé
+            max_pref, worst_etu = hq.nlargest(1, affectations[spe_h])[0]  # on obtient l'etudiant le moins préféré de la spé # log(c)
 
             idx_i = dictSpeIndices[spe_h][num_i]
             if idx_i < max_pref:  # h pref I à least_pref
-                affectations[spe_h].remove((max_pref, worst_etu))  # enleve le pire étudiant
-                hq.heapify(affectations[spe_h])  # reconvertir en heap
+                affectations[spe_h].remove((max_pref, worst_etu))  # enleve le pire étudiant # O(c)
                 etu_libres.add(worst_etu)  # rajout du pire dans les libres
-                hq.heappush(affectations[spe_h], (idx_i, num_i))  # ajout du meilleur (i)
+                hq.heappush(affectations[spe_h], (idx_i, num_i))  # ajout du meilleur (i) # log(c)
 
             else:  # H rejette la proposition de i
                 etu_libres.add(num_i)
 
-    # Convert heap to sorted list for final output
     for spe_h in affectations:
         affectations[spe_h] = [etu for _, etu in sorted(affectations[spe_h])]
-
+    # print("gs etu", nb_it)
     return affectations
 
 
-
+# O(s*e)
 def galeShapley2(tabEtu, tabSpe, cap):
     # Algorithme de Gale-Shapley côté parcours 
+    # nb_it = 0
 
     # Initialisation
     spe_libres = set(range(len(tabSpe)))
@@ -58,6 +60,7 @@ def galeShapley2(tabEtu, tabSpe, cap):
 
         while capSpe[spe_i] > 0:  # tant qu'il reste de la capacité et des étudiants à proposer
             etu_j = int(dictSpe[spe_i].pop(0))
+            # nb_it += 1
 
             if etu_j not in affect:
                 affect[etu_j] = spe_i
@@ -72,7 +75,7 @@ def galeShapley2(tabEtu, tabSpe, cap):
                     affect[etu_j] = spe_i
                     capSpe[spe_i] -= 1
 
-
+    # print("gs spe", nb_it)
     return affect   
 
 

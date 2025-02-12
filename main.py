@@ -30,34 +30,44 @@ def main():
     print("Affectations avec paires instables \n > ", aff1)
 
     # Création du PLNE
-    tools.createPLNE(3, listeEtu, capSpe)
+    tools.createkPLNE(3, listeEtu, capSpe, "Results/main.lp")
 
     # Génération des graphiques pour la complexité
     lstn = []
     lsttemps1 = []
     lsttemps2 = []
+    moyenne = 20
     for i in range(200, 2001, 200):
         capSpe = [i//9, i//9, i//9, i//9, i//9, i//9, i//9, i//9, i//9 + i%9]
         lstn.append(i)
+        ttot1 = 0.0
+        ttot2 = 0.0
 
-        t = time()
-        for _ in range(10):
-            gs.galeShapley(tools.generatePrefEtu(i), tools.generatePrefSpe(i), capSpe)
-        t = time() - t
-        lsttemps1.append(t/10)
+        for _ in range(moyenne):
+            prefEtu = tools.generatePrefEtu(i)
+            prefSpe = tools.generatePrefSpe(i)
+            t = time()
+            gs.galeShapley(prefEtu, prefSpe, capSpe)
+            t = time() - t
+            ttot1 += t
 
-        t2 = time()
-        for _ in range(10):
-            gs.galeShapley2(tools.generatePrefEtu(i), tools.generatePrefSpe(i), capSpe)
-        t2 = time() - t2
-        lsttemps2.append(t2/10)
+            t2 = time()
+            gs.galeShapley2(prefEtu, prefSpe, capSpe)
+            t2 = time() - t2
+            ttot2 += t2
 
+        lsttemps1.append(ttot1/moyenne)
+        lsttemps2.append(ttot2/moyenne)
+
+
+    print(lsttemps1)
+    print(lsttemps2)
     plt.plot(lstn, lsttemps1, label="galeShapley")
     plt.plot(lstn, lsttemps2, label="galeShapley2")
     plt.xlabel("Nombre n d'étudiants")
     plt.ylabel("Temps de calcul moyen")
     plt.legend()
-    plt.savefig('Results/evolution_temps_nbEtu.svg')
+    plt.savefig('Results/evolution_temps.svg')
 
     
     

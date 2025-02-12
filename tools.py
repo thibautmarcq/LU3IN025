@@ -44,7 +44,7 @@ def generatePrefSpe(n: int):
 		prefs.append(pref)
 	return prefs
 
-def createPLNE(k : int, prefEtu, capSpe, outFile):
+def createkPLNE(k : int, prefEtu, capSpe, outFile):
 	f = open(outFile, "w")
 	f.write("Maximize\nobj: ")
 	l = [] #liste des variables
@@ -81,6 +81,76 @@ def createPLNE(k : int, prefEtu, capSpe, outFile):
 			f.write(value[i]+" + ")
 		f.write(value[lenSpe-1]+" <= "+str(capSpe[key])+"\n") 
 		tmp += 1
+
+	f.write("Binary\n")
+	for i in range(len(l)): #variables binaires
+		f.write(l[i]+" ")
+	
+	f.write("\nEnd")
+	f.close()
+
+
+def borda(pref_etu, pref_spe) :
+	nb_etu = len(pref_etu)
+	nb_spe = len(pref_spe)
+
+	borda_etu_spe = [ [-1 for _ in range(nb_spe) ] for _ in range(nb_etu) ]
+	borda_spe_etu = [ [-1 for _ in range(nb_etu) ] for _ in range(nb_spe) ]
+	borda_sum = [ [-1 for _ in range(nb_etu) ] for _ in range(nb_spe) ]
+
+	for etu in range(nb_etu) :
+		for ind in range(nb_spe) :
+			spe = pref_etu[etu][ind]
+			borda_etu_spe[etu][spe] = nb_spe - ind - 1
+
+	for spe in range(nb_spe) :
+		for ind in range(nb_etu) :
+			etu = pref_spe[spe][ind]
+			borda_spe_etu[spe][etu] = nb_etu - ind -1
+
+	for i in range(nb_spe):
+		for j in range(nb_etu):
+			borda_sum[i][j] = borda_etu_spe[j][i] + borda_spe_etu[i][j]
+
+	return borda_sum
+
+
+def createEffiPLNE(borda , capSpe, outFile):
+	f = open(outFile, "w")
+	f.write("Maximize\nobj: ")
+	l = [] #liste des variables
+
+	nbEtu = len(borda) #nombre d'étudiants
+	nbSpe = len(borda[0])
+	for i in range(nbEtu):
+		for j in range(nbSpe):
+			s = "x"+str(i)+"_"+str(j) #nom des variable
+			l.append(s)
+			if(i==nbEtu-1 and j==nbSpe-1): #dernier élément
+				f.write(str(borda[i][j])+" "+s)
+			else : 
+				f.write(str(borda[i][j])+" "+s+" + ")
+
+	f.write("\nSubject To\n")
+	tmp = 1 #compteur pour les contraintes
+	for i in range(len(l)): 
+		if(i%nbSpe==0): 
+			f.write("c"+str(tmp)+": ")
+			tmp+=1
+		if((i+1)%nbSpe==0): #dernier élément de la contrainte
+			f.write(l[i]+" = 1\n")
+		else:
+			f.write(l[i]+" + ")
+
+	for i in range(nbSpe):
+		f.write("c"+str(tmp)+": ")
+		tmp+=1
+		for j in range(nbEtu):
+			if(j==nbEtu-1): #dernier élément
+				f.write("x"+str(j)+"_"+str(i)+" = "+str(capSpe[i])+"\n")
+			else : 
+				f.write("x"+str(j)+"_"+str(i)+" + ")
+
 
 	f.write("Binary\n")
 	for i in range(len(l)): #variables binaires
