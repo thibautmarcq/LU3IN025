@@ -27,7 +27,6 @@ def lectureSpe(s):
 		res[i-2] = contenu[i][2:]
 	return (res,cap)
 
-
 def generatePrefEtu(n : int):
 	prefs = []
 	for _ in range(n):

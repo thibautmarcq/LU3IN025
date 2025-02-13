@@ -70,16 +70,17 @@ def main():
         lsttemps2.append(ttot2/moyenne)
         
         
-        
+    # Plot des temps
     plt.plot(lstn, lsttemps1, label="galeShapley")
     plt.plot(lstn, lsttemps2, label="galeShapley2")
     plt.xlabel("Nombre n d'étudiants")
     plt.ylabel("Temps de calcul moyen")
     plt.legend()
     plt.show()
-    plt.savefig('Results/evolution_temps.svg')
+    # plt.savefig('Results/evolution_temps.svg')
 
-    # Sur les itérations
+
+    # Plot des itérations
     # plt.plot(lstn, lstiter1, label="galeShapley")
     # plt.plot(lstn, lstiter2, label="galeShapley2")
     # plt.xlabel("Nombre n d'étudiants")
