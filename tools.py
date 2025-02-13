@@ -158,3 +158,51 @@ def createEffiPLNE(borda , capSpe, outFile):
 	
 	f.write("\nEnd")
 	f.close()
+
+
+def createKEffiPLNE(borda , kprefEtu, capSpe, outFile):
+	f = open(outFile, "w")
+	f.write("Maximize\nobj: ")
+	l = [] #liste des variables
+	l2 = {} #dico clé:spé, valeur:liste des variables xi_j avec i étudiant et j clé spé
+
+	nbEtu = len(kprefEtu) #nombre d'étudiants
+	nbSpe = len(kprefEtu[0])
+	for i in range(nbEtu):
+		for j in range(nbSpe):
+			spe = kprefEtu[i][j]
+			s = "x"+str(i)+"_"+str(spe) #nom des variable
+			l.append(s)
+			if spe not in l2:
+				l2[spe] = []
+			l2[spe].append(s)
+			if(i==nbEtu-1 and j==nbSpe-1): #dernier élément
+				f.write(str(borda[i][spe])+" "+s)
+			else : 
+				f.write(str(borda[i][spe])+" "+s+" + ")
+
+	f.write("\nSubject To\n")
+	tmp = 1 #compteur pour les contraintes
+	for i in range(len(l)): 
+		if(i%nbSpe==0): 
+			f.write("c"+str(tmp)+": ")
+			tmp+=1
+		if((i+1)%nbSpe==0): #dernier élément de la contrainte
+			f.write(l[i]+" = 1\n")
+		else:
+			f.write(l[i]+" + ")
+
+	for key, value in l2.items(): 
+		f.write("c"+str(tmp)+": ") #contrainte de capacité
+		lenSpe = len(value)
+		for i in range(lenSpe-1):
+			f.write(value[i]+" + ")
+		f.write(value[lenSpe-1]+" = "+str(capSpe[key])+"\n") 
+		tmp += 1
+
+	f.write("Binary\n")
+	for i in range(len(l)): #variables binaires
+		f.write(l[i]+" ")
+	
+	f.write("\nEnd")
+	f.close()
